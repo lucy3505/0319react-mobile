@@ -1,22 +1,67 @@
 import React, { Component } from 'react'
 import Logo from './../../components/logo/logo.jsx'
-import { List, InputItem, Radio, WingBlank, WhiteSpace, Button } from 'antd-mobile';
+import { List, InputItem, Radio, WingBlank, WhiteSpace, Button, Toast } from 'antd-mobile';
 import styles from './index.less'
-const RadioItem = Radio.RadioItem;
-const ListItem = List.Item
-export default class index extends Component {
-  state = { radio: '' }
+// import { reqRegister } from '../../api/user'
+import { connect } from 'react-redux'
+import { register, login } from './../../redux/actions'
 
-  onChange = (radio) => {
+
+const ListItem = List.Item
+class Register extends Component {
+  state = {
+    radio: '',
+    params: {
+      username: "",
+      password: '',
+      password2: '',
+      type: ''
+    }
+
+  }
+
+  handleRadioChange = (type) => {
     this.setState({
-      radio
+      params: {
+        ...this.state.params,
+        type: type
+      }
     })
+  }
+
+  handleInputChange = (value, name) => {
+    const { params } = this.state
+    this.setState({
+      params: {
+        ...params,
+        [name]: value
+      }
+    })
+  }
+
+  handleSubmit = () => {
+    const { params, params: { password, password2 } } = this.state
+    if (password !== password2) {
+      return Toast.fail('两次密码不一致')
+    }
+    console.log(this.props);
+    debugger
+
+    this.props.register(params)
+    // reqRegister(params).then(res => {
+    //   if (res.code === 0) {
+    //     Toast.success('注册成功')
+
+    //   }
+    // })
+
+    // console.log(res)
+
   }
 
 
   render() {
-    const { radio } = this.state
-    const textTitle = "请选择职位"
+    const { type } = this.state.params
     const data = [
       { value: 'dashen', label: "boss" },
       { value: 'laoban', label: "employee" },
@@ -26,27 +71,27 @@ export default class index extends Component {
         <Logo />
         <WhiteSpace />
         <WingBlank>
-          <InputItem placeholder="请输入用户名">
+          <InputItem placeholder="请输入用户名" onChange={(val) => this.handleInputChange(val, 'username')}>
             用户名：
           </InputItem>
-          <InputItem type="password" placeholder="请输入密码">
+          <InputItem type="password" placeholder="请输入密码" onChange={(val) => this.handleInputChange(val, 'password')}>
             密码：
           </InputItem>
-          <InputItem>
-            用户名：
+          <InputItem type="password" placeholder="请输入密码" onChange={(val) => this.handleInputChange(val, 'password2')}>
+            确认密码：
           </InputItem>
           <ListItem >
             <span>请选择职位：</span>
 
             {data.map(i => (
-              <Radio className={styles.myRadio} key={i.value} checked={radio === i.value} onChange={() => this.onChange(i.value)} >
+              <Radio className={styles.myRadio} key={i.value} checked={type === i.value} onChange={() => this.handleRadioChange(i.value)} >
                 {i.label}
               </Radio>
             ))}
 
           </ListItem>
           <WhiteSpace />
-          <Button type="primary">注册</Button>
+          <Button type="primary" onClick={this.handleSubmit}>注册</Button>
           <WhiteSpace />
           <Button>已有账户</Button>
 
@@ -55,3 +100,4 @@ export default class index extends Component {
     )
   }
 }
+export default connect(state => ({}), { register })(Register)
