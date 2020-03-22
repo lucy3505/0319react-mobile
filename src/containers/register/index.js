@@ -3,6 +3,11 @@ import Logo from './../../components/logo/logo.jsx'
 import { List, InputItem, Radio, WingBlank } from 'antd-mobile';
 const RadioItem = Radio.RadioItem;
 export default class index extends Component {
+
+  handleRadioChange=()=>{
+    
+  }
+
   render() {
     const data = [
       { label: 'dashen' },
@@ -19,13 +24,15 @@ export default class index extends Component {
             密码：
           </InputItem>
           <InputItem>
-            用户名：
+            用户名：   
           </InputItem>
-          {data.map(i => (
-            <Radio key={i.label} >
-              {i.label}
-            </Radio>
-          ))}
+           <List renderHeader={() => 'RadioItem demo'}>
+            {data.map(i => (
+                <RadioItem key={i.label} onChange={() => this.onChange(i.label)}>
+            {i.label}
+          </RadioItem>
+        ))}
+      </List>
         </WingBlank>
       </div>
     )
