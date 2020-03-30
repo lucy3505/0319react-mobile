@@ -45,7 +45,7 @@ class Register extends Component {
       return Toast.fail('两次密码不一致')
     }
     console.log(this.props);
-    debugger
+
 
     this.props.register(params)
     // reqRegister(params).then(res => {
